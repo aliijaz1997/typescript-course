@@ -1,0 +1,74 @@
+import React, { useCallback, useRef } from "react";
+import "./App.css";
+import { useTodos } from "./common/useTodo";
+
+const Button: React.FunctionComponent<
+  React.DetailedHTMLProps<
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
+    HTMLButtonElement
+  > & {
+    title?: string;
+  }
+> = ({ title, children, style, ...rest }) => (
+  <button {...rest}>{title ?? children}</button>
+);
+
+function UL<T>({
+  items,
+  render,
+  itemClick,
+}: React.DetailedHTMLProps<
+  React.HTMLAttributes<HTMLUListElement>,
+  HTMLUListElement
+> & {
+  items: T[];
+  render: (item: T) => React.ReactNode;
+  itemClick: (item: T) => void;
+}) {
+  return (
+    <ul>
+      {items.map((item, index) => (
+        <li onClick={() => itemClick(item)} key={index}>
+          {render(item)}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function App() {
+  const { todos, addTodo, removeTodo } = useTodos([
+    { id: 0, text: "Hey there", done: false },
+  ]);
+
+  const newTodoRef = useRef<HTMLInputElement>(null);
+
+  const onAddTodo = useCallback(() => {
+    if (newTodoRef.current) {
+      addTodo(newTodoRef.current.value);
+      newTodoRef.current.value = "";
+    }
+  }, [addTodo]);
+
+  return (
+    <div>
+      <h1>Hello world from extensive typescript</h1>
+      <UL
+        items={todos}
+        itemClick={(item) => alert(item.id)}
+        render={(todo) => (
+          <>
+            {todo.text}
+            <button onClick={() => removeTodo(todo.id)}>Remove</button>
+          </>
+        )}
+      />
+      <div>
+        <input type="text" ref={newTodoRef} />
+        <Button onClick={onAddTodo}>Add Todo</Button>
+      </div>
+    </div>
+  );
+}
+
+export default App;
