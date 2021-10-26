@@ -13,22 +13,22 @@ function makeCat(name: string, breed: string): Readonly<Cat> {
 const usul = makeCat("Usul", "Tabby");
 // usul.name = "Piter"; we cant assign as the return type is readonly so it can only be read
 
-class Person {
+class Personnn {
   constructor(public readonly name: string, public readonly age: number) {}
 }
 
-const person1 = new Person("Hifz ur Rehman", 24);
+const person1 = new Personnn("Hifz ur Rehman", 24);
 // lgg.name = "Foo"; willl not work as the readonly
 console.log(person1.name);
 
 class StudentList {
-  private persons: Person[] = [];
+  private persons: Personnn[] = [];
 
   static instance: StudentList = new StudentList();
 
   private constructor() {}
   // setter
-  static addPerson(person: Person) {
+  static addPerson(person: Personnn) {
     StudentList.instance.persons.push(person);
   }
   //getter
