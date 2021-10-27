@@ -1,6 +1,7 @@
 import React, { useCallback, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import "./App.css";
-import { useTodos } from "./common/useTodo";
+import { addTodo, removeTodo, selectTodos } from "./store/store";
 
 const Button: React.FunctionComponent<
   React.DetailedHTMLProps<
@@ -37,29 +38,29 @@ function UL<T>({
 }
 
 function App() {
-  const { todos, addTodo, removeTodo } = useTodos([
-    { id: 0, text: "Hey there", done: false },
-  ]);
-
   const newTodoRef = useRef<HTMLInputElement>(null);
-
+  const todos = useSelector(selectTodos);
+  const dispatch = useDispatch();
   const onAddTodo = useCallback(() => {
     if (newTodoRef.current) {
-      addTodo(newTodoRef.current.value);
+      // addTodo(newTodoRef.current.value)
+      dispatch(addTodo(newTodoRef.current.value));
       newTodoRef.current.value = "";
     }
-  }, [addTodo]);
+  }, [dispatch]);
 
   return (
     <div>
-      <h1>Hello world from extensive typescript</h1>
+      <h1>Hello world from extensive typescript using RTK</h1>
       <UL
         items={todos}
         itemClick={(item) => alert(item.id)}
         render={(todo) => (
           <>
             {todo.text}
-            <button onClick={() => removeTodo(todo.id)}>Remove</button>
+            <button onClick={() => dispatch(removeTodo(todo.id))}>
+              Remove
+            </button>
           </>
         )}
       />
